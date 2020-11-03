@@ -1,0 +1,25 @@
+.shouye{
+    float: left;
+    text-align: center;
+    font-size: 16px;
+    margin: 20px 0;
+}
+
+.uploadbtndiv{
+    /*float: right;*/
+    float: right;
+}
+
+.uploadbtn{
+    /* 这里有问题的 */
+    margin: 10px 0;
+}
+
+
+/* 解决表格的列之间高度不一致 */
+.layui-table-cell {
+    height: auto;
+}
+
+
+
