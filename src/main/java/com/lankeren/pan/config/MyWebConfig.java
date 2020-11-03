@@ -27,6 +27,8 @@ public class MyWebConfig implements WebMvcConfigurer {
 
         // 映射到真实路径
         registry.addResourceHandler("/upload/**").addResourceLocations("file:E:\\JavaWorkPlace\\PersonTest\\lankerenpan\\src\\main\\resources\\upload\\");
+
+        registry.addResourceHandler("/myFiles/**").addResourceLocations("file:/usr/local/lankeren/lankerenpan/");
     }
 
 }

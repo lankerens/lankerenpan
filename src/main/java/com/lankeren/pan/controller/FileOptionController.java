@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+
 
 /**
  * @author lankeren
@@ -46,6 +48,18 @@ public class FileOptionController {
             response.put("msg", "出现异常了");
             response.put("data", null);
             return response;
+        }
+        return response;
+    }
+
+    @RequestMapping(value = "/download", method = RequestMethod.POST)
+    public MyResponse download(String fileName, HttpServletResponse res){
+        MyResponse<Object> response = new MyResponse<>();
+        if (fileName == null || "".equals(fileName)) return new MyResponse(Status.fail);
+        try {
+            response.setData(fileOptionService.download(fileName, res));
+        } catch (Exception e) {
+            return new MyResponse<>(Status.fail, e.getMessage());
         }
         return response;
     }

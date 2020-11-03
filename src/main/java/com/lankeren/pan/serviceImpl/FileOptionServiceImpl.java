@@ -8,8 +8,8 @@ import com.lankeren.pan.utils.FileUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -24,12 +24,12 @@ public class FileOptionServiceImpl implements FileOptionService {
 
     @Override
     public Object uploadFile(MultipartFile[] files) {
-        for (MultipartFile file: files) {
+        for (MultipartFile file : files) {
             String filename = file.getOriginalFilename();
             assert filename != null;
             String suffix = filename.substring(filename.lastIndexOf(".") + 1);
             try {
-                if(FileUtils.fileTypeCheck(suffix) || FileUtils.hasSameName(filename)){
+                if (FileUtils.fileTypeCheck(suffix) || FileUtils.hasSameName(filename)) {
                     // 不合法
                     return "失败了";
                 }
@@ -49,6 +49,37 @@ public class FileOptionServiceImpl implements FileOptionService {
         List<FileInfo> list = FileUtils.getFileInfoMap();
         response.put("count", list.size());
         response.put("data", list);
+        return response;
+    }
+
+    @Override
+    public Object download(String fileName, HttpServletResponse response) {
+        // 未使用到
+        String filePath = Constants.savePath + fileName;
+        File file = new File(filePath);
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = new BufferedInputStream(new FileInputStream(file));
+            byte[] buff = new byte[is.available()];
+            is.read(buff);
+            os = new BufferedOutputStream(response.getOutputStream());
+            response.setContentType("application/octet-stream");
+            os.write(buff);
+            // 清空缓冲区
+            os.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (os != null)
+                    os.close();
+                if (is != null)
+                    is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return response;
     }
 }
